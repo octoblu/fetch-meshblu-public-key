@@ -24,7 +24,7 @@ class Command
   constructor: ->
     process.on 'uncaughtException', @die
     options = @parseOptions()
-    @uri = options['meshblu-public-key-uri'] ? 'https://meshblu.octoblu.com/publickey'
+    @uri = options['meshblu_public_key_uri'] ? 'https://meshblu.octoblu.com/publickey'
 
   parseOptions: =>
     parser = dashdash.createParser({options: OPTIONS})
