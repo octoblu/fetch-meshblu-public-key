@@ -1,21 +1,59 @@
-# generator-octoblu-cli
+# fetch-meshblu-public-key
 
-[![Dependency status](http://img.shields.io/david/octoblu/generator-octoblu-cli.svg?style=flat)](https://david-dm.org/octoblu/generator-octoblu-cli)
-[![devDependency Status](http://img.shields.io/david/dev/octoblu/generator-octoblu-cli.svg?style=flat)](https://david-dm.org/octoblu/generator-octoblu-cli#info=devDependencies)
-[![Build Status](http://img.shields.io/travis/octoblu/generator-octoblu-cli.svg?style=flat&branch=master)](https://travis-ci.org/octoblu/generator-octoblu-cli)
+[![Dependency status](http://img.shields.io/david/octoblu/fetch-meshblu-public-key.svg?style=flat)](https://david-dm.org/octoblu/fetch-meshblu-public-key)
+[![devDependency Status](http://img.shields.io/david/dev/octoblu/fetch-meshblu-public-key.svg?style=flat)](https://david-dm.org/octoblu/fetch-meshblu-public-key#info=devDependencies)
+[![Build Status](http://img.shields.io/travis/octoblu/fetch-meshblu-public-key.svg?style=flat)](https://travis-ci.org/octoblu/fetch-meshblu-public-key)
 
-[![NPM](https://nodei.co/npm/generator-octoblu-cli.svg?style=flat)](https://npmjs.org/package/generator-octoblu-cli)
+[![NPM](https://nodei.co/npm/fetch-meshblu-public-key.svg?style=flat)](https://npmjs.org/package/fetch-meshblu-public-key)
 
-## Installing
+## Installing in a Project
 
 ```bash
-$ npm install generator-octoblu-cli
+npm install fetch-meshblu-public-key --save
+```
+
+Add the following to your `package.json`
+
+```js
+{
+  // ...
+  "scripts": {
+    // ...
+    "start": "fetch-meshblu-public-key && ...",
+    // ...
+  }
+  // ...
+}
+```
+
+## Installing Globally
+
+```bash
+npm install fetch-meshblu-public-key --global
 ```
 
 ### Usage
 
-```javascript
-console.log('hello world!');
+```bash
+fetch-meshblu-public-key --meshblu-public-key-uri 'https://meshblu.octoblu.com/publickey'
+```
+
+or
+
+```bash
+fetch-meshblu-public-key -m 'https://meshblu.octoblu.com/publickey'
+```
+
+or
+
+```bash
+env MESHBLU_PUBLIC_KEY_URI='https://meshblu.octoblu.com/publickey' fetch-meshblu-public-key
+```
+
+or, use the default uri of `https://meshblu.octoblu.com/publickey`
+
+```bash
+fetch-meshblu-public-key
 ```
 
 ## License

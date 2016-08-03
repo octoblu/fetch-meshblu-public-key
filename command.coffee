@@ -1,7 +1,9 @@
 colors        = require 'colors'
 dashdash      = require 'dashdash'
-
-packageJSON = require './package.json'
+request       = require 'request'
+fs            = require 'fs'
+path          = require 'path'
+packageJSON   = require './package.json'
 
 OPTIONS = [{
   names: ['meshblu-public-key-uri', 'm']
@@ -21,7 +23,8 @@ OPTIONS = [{
 class Command
   constructor: ->
     process.on 'uncaughtException', @die
-    {@example} = @parseOptions()
+    options = @parseOptions()
+    @uri = options['meshblu-public-key-uri'] ? 'https://meshblu.octoblu.com/publickey'
 
   parseOptions: =>
     parser = dashdash.createParser({options: OPTIONS})
@@ -35,15 +38,23 @@ class Command
       console.log packageJSON.version
       process.exit 0
 
-    if !options['meshblu-public-key-uri']
-      console.error "usage: fetch-meshblu-public-key [OPTIONS]\noptions:\n#{parser.help({includeEnv: true})}"
-      console.error colors.red 'Missing required parameter --example, -e, or env: EXAMPLE'
-      process.exit 1
-
     return options
 
+  getWriteStream: =>
+    filePath = path.join process.cwd(), 'public-key.json'
+    fs.createWriteStream filePath
+
+  getRequestStream: (callback) =>
+    stream = request.get @uri
+    stream.on 'error', callback
+    stream.on 'response', (response) =>
+      return callback new Error('Invalid public-key-uri') if response.statusCode >= 400
+      callback null, stream
+
   run: =>
-    console.log "Hi Example! #{@example}"
+    @getRequestStream (error, stream) =>
+      return @die error if error?
+      stream.pipe @getWriteStream()
 
   die: (error) =>
     return process.exit(0) unless error?
