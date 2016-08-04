@@ -1,9 +1,8 @@
-colors        = require 'colors'
-dashdash      = require 'dashdash'
-request       = require 'request'
-fs            = require 'fs'
-path          = require 'path'
-packageJSON   = require './package.json'
+colors         = require 'colors'
+dashdash       = require 'dashdash'
+path           = require 'path'
+FetchPublicKey = require './src/index.coffee'
+packageJSON    = require './package.json'
 
 OPTIONS = [{
   names: ['meshblu-public-key-uri', 'm']
@@ -25,6 +24,7 @@ class Command
     process.on 'uncaughtException', @die
     options = @parseOptions()
     @uri = options['meshblu_public_key_uri'] ? 'https://meshblu.octoblu.com/publickey'
+    @fetchPublicKey = new FetchPublicKey
 
   parseOptions: =>
     parser = dashdash.createParser({options: OPTIONS})
@@ -40,21 +40,10 @@ class Command
 
     return options
 
-  getWriteStream: =>
-    filePath = path.join process.cwd(), 'public-key.json'
-    fs.createWriteStream filePath
-
-  getRequestStream: (callback) =>
-    stream = request.get @uri
-    stream.on 'error', callback
-    stream.on 'response', (response) =>
-      return callback new Error('Invalid public-key-uri') if response.statusCode >= 400
-      callback null, stream
-
   run: =>
-    @getRequestStream (error, stream) =>
+    @fetchPublicKey.download @uri, path.join(process.cwd(), 'public-key.json'), (error) =>
       return @die error if error?
-      stream.pipe @getWriteStream()
+      process.exit 0
 
   die: (error) =>
     return process.exit(0) unless error?
